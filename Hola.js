@@ -1,6 +1,6 @@
 var carrito = [];
 var NUMERO_WHATSAPP = "+584121656611";
-var categoriaActiva = "todos";
+var swipeInitialized = false;
 
 // Cargar carrito desde localStorage al iniciar
 function cargarCarrito() {
@@ -27,7 +27,7 @@ function guardarCarrito() {
     }
 }
 
-// 1. AÑADIR AL CARRITO (Sin abrir el panel automáticamente)
+// 1. AÑADIR AL CARRITO
 function agregarAlCarrito(nombre, precio) {
     precio = parseFloat(precio);
     if (isNaN(precio)) {
@@ -35,7 +35,6 @@ function agregarAlCarrito(nombre, precio) {
         return;
     }
 
-    // Verificar si el producto ya existe en el carrito
     var existe = false;
     for (var i = 0; i < carrito.length; i++) {
         if (carrito[i].nombre === nombre) {
@@ -83,6 +82,11 @@ function actualizarCarritoUI() {
         countElem.textContent = carrito.length;
     }
 
+    var floatingCountElem = document.getElementById("floating-cart-count");
+    if (floatingCountElem) {
+        floatingCountElem.textContent = carrito.length;
+    }
+
     var cartItemsList = document.getElementById("cart-items");
     if (cartItemsList) {
         cartItemsList.innerHTML = "";
@@ -103,9 +107,7 @@ function actualizarCarritoUI() {
                     '</div>' +
                     '<button onclick="eliminarDelCarrito(' + i + ')" title="Eliminar artículo" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 0.8em; transition: all 0.2s;">✕ Eliminar</button>';
 
-                // Insertar nombre de forma segura para evitar XSS
                 li.querySelector("span").textContent = producto.nombre;
-
                 cartItemsList.appendChild(li);
             }
         }
@@ -114,6 +116,21 @@ function actualizarCarritoUI() {
         if (totalElem) {
             totalElem.textContent = total.toFixed(2);
         }
+    }
+    actualizarConversion();
+}
+
+// 4.5. ACTUALIZAR CONVERSIÓN A BOLÍVARES
+function actualizarConversion() {
+    var totalElem = document.getElementById("cart-total");
+    var totalBsElem = document.getElementById("total-bs");
+    var tasaElem = document.getElementById("tasa-cambio");
+
+    if (totalElem && totalBsElem && tasaElem) {
+        var totalUSD = parseFloat(totalElem.textContent) || 0;
+        var tasa = parseFloat(tasaElem.value) || 973.93;
+        var totalBs = totalUSD * tasa;
+        totalBsElem.textContent = totalBs.toFixed(2);
     }
 }
 
@@ -127,33 +144,7 @@ function toggleCarrito() {
     }
 }
 
-// 6. FILTRAR POR CATEGORÍAS
-function filtrarCategoria(categoria, elementoBoton) {
-    categoriaActiva = categoria;
-    var productos = document.querySelectorAll(".product-card");
-    var botones = document.querySelectorAll(".category-btn");
-
-    for (var j = 0; j < botones.length; j++) {
-        botones[j].classList.remove("active");
-    }
-
-    if (elementoBoton) {
-        elementoBoton.classList.add("active");
-    }
-
-    for (var i = 0; i < productos.length; i++) {
-        var card = productos[i];
-        var cat = card.getAttribute("data-category");
-
-        if (categoria === "todos" || cat === categoria) {
-            card.classList.remove("hidden");
-        } else {
-            card.classList.add("hidden");
-        }
-    }
-}
-
-// 7. BUSCADOR EN TIEMPO REAL (respeta el filtro de categoría activo)
+// 6. BUSCADOR EN TIEMPO REAL
 function buscarProducto() {
     var input = document.getElementById("search-input").value.toLowerCase();
     var productos = document.querySelectorAll(".product-card");
@@ -161,12 +152,8 @@ function buscarProducto() {
     for (var i = 0; i < productos.length; i++) {
         var card = productos[i];
         var titulo = card.querySelector("h3").textContent.toLowerCase();
-        var cat = card.getAttribute("data-category");
 
-        var coincideCategoria = (categoriaActiva === "todos" || cat === categoriaActiva);
-        var coincideBusqueda = (titulo.indexOf(input) !== -1);
-
-        if (coincideCategoria && coincideBusqueda) {
+        if (titulo.indexOf(input) !== -1) {
             card.classList.remove("hidden");
         } else {
             card.classList.add("hidden");
@@ -174,7 +161,169 @@ function buscarProducto() {
     }
 }
 
-// 8. ENVIAR ORDEN A WHATSAPP
+// 7. SCROLL CARRUSEL
+function scrollCarousel(boton, direccion) {
+    var container = boton.parentElement;
+    var track = container.querySelector(".carousel-track");
+    if (track) {
+        var card = track.querySelector(".product-card");
+        var cardWidth = card ? card.offsetWidth + 15 : 215;
+        track.scrollBy({ left: direccion * cardWidth * 2, behavior: "smooth" });
+    }
+}
+
+// 8. MENÚ HAMBURGUESA
+function toggleMenu() {
+    var menu = document.getElementById("side-menu");
+    var overlay = document.getElementById("menu-overlay");
+    var hamburger = document.querySelector(".hamburger-btn");
+
+    if (menu && overlay) {
+        menu.classList.toggle("open");
+        overlay.classList.toggle("active");
+        if (hamburger) {
+            hamburger.classList.toggle("active");
+        }
+    }
+}
+
+// 9. SCROLL A SECCIÓN
+function scrollToSection(id) {
+    var section = document.getElementById(id);
+    if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+}
+
+// 10. CERRAR MENÚ AL HACER SCROLL
+function initScrollClose() {
+    var lastScrollY = window.scrollY;
+    var menu = document.getElementById("side-menu");
+    var cartSidebar = document.getElementById("cart-sidebar");
+
+    window.addEventListener("scroll", function() {
+        var currentScrollY = window.scrollY;
+
+        // Cerrar menú si se hace scroll hacia abajo
+        if (currentScrollY > lastScrollY && menu && menu.classList.contains("open")) {
+            toggleMenu();
+        }
+
+        // Cerrar carrito si se hace scroll hacia abajo
+        if (currentScrollY > lastScrollY && cartSidebar && cartSidebar.classList.contains("open")) {
+            toggleCarrito();
+        }
+
+        lastScrollY = currentScrollY;
+    }, { passive: true });
+}
+
+// 11. SWIPE GESTURES PARA CARRUSELES
+function initSwipeGestures() {
+    var tracks = document.querySelectorAll(".carousel-track");
+
+    tracks.forEach(function(track) {
+        var isDown = false;
+        var startX = 0;
+        var startScrollLeft = 0;
+        var velocity = 0;
+        var lastX = 0;
+        var lastTime = 0;
+
+        // Mouse events (desktop)
+        track.addEventListener("mousedown", function(e) {
+            isDown = true;
+            track.classList.add("dragging");
+            startX = e.pageX;
+            startScrollLeft = track.scrollLeft;
+            lastX = e.pageX;
+            lastTime = Date.now();
+            velocity = 0;
+        });
+
+        track.addEventListener("mousemove", function(e) {
+            if (!isDown) return;
+            e.preventDefault();
+            var x = e.pageX;
+            var walk = (x - startX) * 2;
+            track.scrollLeft = startScrollLeft - walk;
+
+            var now = Date.now();
+            var dt = now - lastTime;
+            if (dt > 0) {
+                velocity = (x - lastX) / dt;
+                lastX = x;
+                lastTime = now;
+            }
+        });
+
+        track.addEventListener("mouseup", function() {
+            if (!isDown) return;
+            isDown = false;
+            track.classList.remove("dragging");
+
+            if (Math.abs(velocity) > 0.5) {
+                var momentum = velocity * 200;
+                track.scrollBy({ left: -momentum, behavior: "smooth" });
+            }
+        });
+
+        track.addEventListener("mouseleave", function() {
+            if (isDown) {
+                isDown = false;
+                track.classList.remove("dragging");
+            }
+        });
+
+        // Touch events (móvil)
+        track.addEventListener("touchstart", function(e) {
+            isDown = true;
+            track.classList.add("dragging");
+            startX = e.touches[0].pageX;
+            startScrollLeft = track.scrollLeft;
+            lastX = e.touches[0].pageX;
+            lastTime = Date.now();
+            velocity = 0;
+        }, { passive: true });
+
+        track.addEventListener("touchmove", function(e) {
+            if (!isDown) return;
+            var x = e.touches[0].pageX;
+            var walk = (x - startX) * 1.5;
+            track.scrollLeft = startScrollLeft - walk;
+
+            var now = Date.now();
+            var dt = now - lastTime;
+            if (dt > 0) {
+                velocity = (x - lastX) / dt;
+                lastX = x;
+                lastTime = now;
+            }
+        }, { passive: true });
+
+        track.addEventListener("touchend", function() {
+            if (!isDown) return;
+            isDown = false;
+            track.classList.remove("dragging");
+
+            if (Math.abs(velocity) > 0.3) {
+                var momentum = velocity * 150;
+                track.scrollBy({ left: -momentum, behavior: "smooth" });
+            }
+        });
+    });
+
+    swipeInitialized = true;
+}
+
+// 12. REINICIAR SWIPE GESTURES (para contenido dinámico)
+function reinitSwipeGestures() {
+    if (swipeInitialized) {
+        initSwipeGestures();
+    }
+}
+
+// 13. ENVIAR ORDEN A WHATSAPP
 function enviarWhatsApp() {
     if (carrito.length === 0) {
         alert("El carrito está vacío. Agrega algún producto antes de enviar tu orden.");
@@ -189,15 +338,19 @@ function enviarWhatsApp() {
         total += carrito[i].precio;
     }
 
-    mensaje += "\nMonto Total Estimado: $" + total.toFixed(2) + "\n\n¿Tienen disponibilidad de estos artículos?";
+    var tasa = parseFloat(document.getElementById("tasa-cambio").value) || 973.93;
+    var totalBs = total * tasa;
+
+    mensaje += "\nMonto Total Estimado: $" + total.toFixed(2) + " USD";
+    mensaje += "\nMonto Total Estimado: Bs. " + totalBs.toFixed(2) + " (tasa del día)";
+    mensaje += "\n\n¿Tienen disponibilidad de estos artículos?";
 
     var url = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
     window.open(url, "_blank");
 }
 
-// 9. MOSTRAR NOTIFICACIONES TOAST
+// 14. MOSTRAR NOTIFICACIONES TOAST
 function mostrarToast(mensaje, tipo) {
-    // Crear contenedor de toasts si no existe
     var container = document.getElementById("toast-container");
     if (!container) {
         container = document.createElement("div");
@@ -206,7 +359,6 @@ function mostrarToast(mensaje, tipo) {
         document.body.appendChild(container);
     }
 
-    // Colores según tipo
     var colores = {
         success: { bg: "#22c55e", border: "#16a34a" },
         warning: { bg: "#f59e0b", border: "#d97706" },
@@ -214,14 +366,12 @@ function mostrarToast(mensaje, tipo) {
     };
     var color = colores[tipo] || colores.info;
 
-    // Crear toast
     var toast = document.createElement("div");
     toast.style.cssText = "background: " + color.bg + "; color: white; padding: 12px 20px; border-radius: 10px; border-left: 4px solid " + color.border + "; font-weight: 600; font-size: 0.9em; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideIn 0.3s ease; max-width: 300px;";
     toast.textContent = mensaje;
 
     container.appendChild(toast);
 
-    // Remover después de 3 segundos
     setTimeout(function() {
         toast.style.animation = "slideOut 0.3s ease";
         setTimeout(function() {
@@ -237,6 +387,8 @@ var style = document.createElement("style");
 style.textContent = "@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }";
 document.head.appendChild(style);
 
-// Inicializar carrito al cargar la página
+// Inicializar
 cargarCarrito();
 actualizarCarritoUI();
+initSwipeGestures();
+initScrollClose();
