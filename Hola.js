@@ -126,9 +126,12 @@ function actualizarConversion() {
     var totalBsElem = document.getElementById("total-bs");
     var tasaElem = document.getElementById("tasa-cambio");
 
+    var tasaElem = document.getElementById("tasa-cambio");
+
     if (totalElem && totalBsElem && tasaElem) {
         var totalUSD = parseFloat(totalElem.textContent) || 0;
         var tasa = parseFloat(tasaElem.value) || 973.93;
+        var tasa = parseFloat(tasaElem.value) || 0;
         var totalBs = totalUSD * tasa;
         totalBsElem.textContent = totalBs.toFixed(2);
     }
