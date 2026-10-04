@@ -1,11 +1,13 @@
-var carrito = [];
-var NUMERO_WHATSAPP = "+584121656611";
-var swipeInitialized = false;
+'use strict';
+
+const NUMERO_WHATSAPP = "+584121656611";
+let carrito = [];
+let swipeInitialized = false;
 
 // Cargar carrito desde localStorage al iniciar
 function cargarCarrito() {
     try {
-        var guardado = localStorage.getItem("carrito");
+        const guardado = localStorage.getItem("carrito");
         if (guardado) {
             carrito = JSON.parse(guardado);
             if (!Array.isArray(carrito)) {
@@ -35,8 +37,8 @@ function agregarAlCarrito(nombre, precio) {
         return;
     }
 
-    var existe = false;
-    for (var i = 0; i < carrito.length; i++) {
+    let existe = false;
+    for (let i = 0; i < carrito.length; i++) {
         if (carrito[i].nombre === nombre) {
             existe = true;
             break;
@@ -77,42 +79,60 @@ function vaciarCarrito() {
 
 // 4. ACTUALIZAR INTERFAZ DEL CARRITO
 function actualizarCarritoUI() {
-    var countElem = document.getElementById("cart-count");
+    const countElem = document.getElementById("cart-count");
     if (countElem) {
         countElem.textContent = carrito.length;
     }
 
-    var floatingCountElem = document.getElementById("floating-cart-count");
+    const floatingCountElem = document.getElementById("floating-cart-count");
     if (floatingCountElem) {
         floatingCountElem.textContent = carrito.length;
     }
 
-    var cartItemsList = document.getElementById("cart-items");
+    const cartItemsList = document.getElementById("cart-items");
     if (cartItemsList) {
         cartItemsList.innerHTML = "";
-        var total = 0;
+        let total = 0;
 
         if (carrito.length === 0) {
-            cartItemsList.innerHTML = '<li style="text-align: center; color: #94a3b8; border: none; padding: 20px 0;">El carrito está vacío.</li>';
+            cartItemsList.innerHTML = '<li class="cart-item-empty">El carrito está vacío.</li>';
         } else {
-            for (var i = 0; i < carrito.length; i++) {
-                var producto = carrito[i];
+            for (let i = 0; i < carrito.length; i++) {
+                const producto = carrito[i];
                 total += producto.precio;
 
-                var li = document.createElement("li");
-                li.innerHTML =
-                    '<div style="display: flex; flex-direction: column; gap: 2px;">' +
-                        '<span style="font-weight: 600;"></span>' +
-                        '<span style="color: #22c55e; font-weight: 700;">$' + producto.precio.toFixed(2) + '</span>' +
-                    '</div>' +
-                    '<button onclick="eliminarDelCarrito(' + i + ')" title="Eliminar artículo" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 0.8em; transition: all 0.2s;">✕ Eliminar</button>';
+                const li = document.createElement("li");
 
-                li.querySelector("span").textContent = producto.nombre;
+                // Creación segura de elementos DOM (previene XSS)
+                const divInfo = document.createElement('div');
+                divInfo.className = 'cart-item-info';
+
+                const spanNombre = document.createElement('span');
+                spanNombre.className = 'cart-item-name';
+                spanNombre.textContent = producto.nombre;
+
+                const spanPrecio = document.createElement('span');
+                spanPrecio.className = 'cart-item-price';
+                spanPrecio.textContent = "$" + producto.precio.toFixed(2);
+
+                divInfo.appendChild(spanNombre);
+                divInfo.appendChild(spanPrecio);
+                li.appendChild(divInfo);
+
+                const btnEliminar = document.createElement('button');
+                btnEliminar.setAttribute('title', 'Eliminar artículo');
+                btnEliminar.className = 'cart-item-delete';
+                btnEliminar.textContent = "✕ Eliminar";
+                btnEliminar.addEventListener('click', function() {
+                    eliminarDelCarrito(i);
+                });
+                li.appendChild(btnEliminar);
+
                 cartItemsList.appendChild(li);
             }
         }
 
-        var totalElem = document.getElementById("cart-total");
+        const totalElem = document.getElementById("cart-total");
         if (totalElem) {
             totalElem.textContent = total.toFixed(2);
         }
@@ -122,25 +142,22 @@ function actualizarCarritoUI() {
 
 // 4.5. ACTUALIZAR CONVERSIÓN A BOLÍVARES
 function actualizarConversion() {
-    var totalElem = document.getElementById("cart-total");
-    var totalBsElem = document.getElementById("total-bs");
-    var tasaElem = document.getElementById("tasa-cambio");
-
-    var tasaElem = document.getElementById("tasa-cambio");
+    const totalElem = document.getElementById("cart-total");
+    const totalBsElem = document.getElementById("total-bs");
+    const tasaElem = document.getElementById("tasa-cambio");
 
     if (totalElem && totalBsElem && tasaElem) {
-        var totalUSD = parseFloat(totalElem.textContent) || 0;
-        var tasa = parseFloat(tasaElem.value) || 973.93;
-        var tasa = parseFloat(tasaElem.value) || 0;
-        var totalBs = totalUSD * tasa;
+        const totalUSD = parseFloat(totalElem.textContent) || 0;
+        const tasa = Math.max(0, parseFloat(tasaElem.value)) || 973.93;
+        const totalBs = totalUSD * tasa;
         totalBsElem.textContent = totalBs.toFixed(2);
     }
 }
 
 // 5. ABRIR / CERRAR CARRITO
 function toggleCarrito() {
-    var sidebar = document.getElementById("cart-sidebar");
-    var overlay = document.getElementById("overlay");
+    const sidebar = document.getElementById("cart-sidebar");
+    const overlay = document.getElementById("overlay");
     if (sidebar && overlay) {
         sidebar.classList.toggle("open");
         overlay.classList.toggle("active");
@@ -148,13 +165,19 @@ function toggleCarrito() {
 }
 
 // 6. BUSCADOR EN TIEMPO REAL
-function buscarProducto() {
-    var input = document.getElementById("search-input").value.toLowerCase();
-    var productos = document.querySelectorAll(".product-card");
+function normalizarTexto(texto) {
+    return texto.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+}
 
-    for (var i = 0; i < productos.length; i++) {
-        var card = productos[i];
-        var titulo = card.querySelector("h3").textContent.toLowerCase();
+function buscarProducto() {
+    const input = normalizarTexto(document.getElementById("search-input").value);
+    const productos = document.querySelectorAll(".product-card");
+
+    for (let i = 0; i < productos.length; i++) {
+        const card = productos[i];
+        const titulo = normalizarTexto(card.querySelector("h3").textContent);
 
         if (titulo.indexOf(input) !== -1) {
             card.classList.remove("hidden");
@@ -166,20 +189,20 @@ function buscarProducto() {
 
 // 7. SCROLL CARRUSEL
 function scrollCarousel(boton, direccion) {
-    var container = boton.parentElement;
-    var track = container.querySelector(".carousel-track");
+    const container = boton.parentElement;
+    const track = container.querySelector(".carousel-track");
     if (track) {
-        var card = track.querySelector(".product-card");
-        var cardWidth = card ? card.offsetWidth + 15 : 215;
+        const card = track.querySelector(".product-card");
+        const cardWidth = card ? card.offsetWidth + 15 : 215;
         track.scrollBy({ left: direccion * cardWidth * 2, behavior: "smooth" });
     }
 }
 
 // 8. MENÚ HAMBURGUESA
 function toggleMenu() {
-    var menu = document.getElementById("side-menu");
-    var overlay = document.getElementById("menu-overlay");
-    var hamburger = document.querySelector(".hamburger-btn");
+    const menu = document.getElementById("side-menu");
+    const overlay = document.getElementById("menu-overlay");
+    const hamburger = document.querySelector(".hamburger-btn");
 
     if (menu && overlay) {
         menu.classList.toggle("open");
@@ -192,7 +215,7 @@ function toggleMenu() {
 
 // 9. SCROLL A SECCIÓN
 function scrollToSection(id) {
-    var section = document.getElementById(id);
+    const section = document.getElementById(id);
     if (section) {
         section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -200,38 +223,43 @@ function scrollToSection(id) {
 
 // 10. CERRAR MENÚ AL HACER SCROLL
 function initScrollClose() {
-    var lastScrollY = window.scrollY;
-    var menu = document.getElementById("side-menu");
-    var cartSidebar = document.getElementById("cart-sidebar");
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    const menu = document.getElementById("side-menu");
+    const cartSidebar = document.getElementById("cart-sidebar");
 
     window.addEventListener("scroll", function() {
-        var currentScrollY = window.scrollY;
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                const currentScrollY = window.scrollY;
 
-        // Cerrar menú si se hace scroll hacia abajo
-        if (currentScrollY > lastScrollY && menu && menu.classList.contains("open")) {
-            toggleMenu();
+                if (currentScrollY > lastScrollY && menu && menu.classList.contains("open")) {
+                    toggleMenu();
+                }
+
+                if (currentScrollY > lastScrollY && cartSidebar && cartSidebar.classList.contains("open")) {
+                    toggleCarrito();
+                }
+
+                lastScrollY = currentScrollY;
+                ticking = false;
+            });
+            ticking = true;
         }
-
-        // Cerrar carrito si se hace scroll hacia abajo
-        if (currentScrollY > lastScrollY && cartSidebar && cartSidebar.classList.contains("open")) {
-            toggleCarrito();
-        }
-
-        lastScrollY = currentScrollY;
     }, { passive: true });
 }
 
 // 11. SWIPE GESTURES PARA CARRUSELES
 function initSwipeGestures() {
-    var tracks = document.querySelectorAll(".carousel-track");
+    const tracks = document.querySelectorAll(".carousel-track");
 
     tracks.forEach(function(track) {
-        var isDown = false;
-        var startX = 0;
-        var startScrollLeft = 0;
-        var velocity = 0;
-        var lastX = 0;
-        var lastTime = 0;
+        let isDown = false;
+        let startX = 0;
+        let startScrollLeft = 0;
+        let velocity = 0;
+        let lastX = 0;
+        let lastTime = 0;
 
         // Mouse events (desktop)
         track.addEventListener("mousedown", function(e) {
@@ -247,12 +275,12 @@ function initSwipeGestures() {
         track.addEventListener("mousemove", function(e) {
             if (!isDown) return;
             e.preventDefault();
-            var x = e.pageX;
-            var walk = (x - startX) * 2;
+            const x = e.pageX;
+            const walk = (x - startX) * 2;
             track.scrollLeft = startScrollLeft - walk;
 
-            var now = Date.now();
-            var dt = now - lastTime;
+            const now = Date.now();
+            const dt = now - lastTime;
             if (dt > 0) {
                 velocity = (x - lastX) / dt;
                 lastX = x;
@@ -266,7 +294,7 @@ function initSwipeGestures() {
             track.classList.remove("dragging");
 
             if (Math.abs(velocity) > 0.5) {
-                var momentum = velocity * 200;
+                const momentum = velocity * 200;
                 track.scrollBy({ left: -momentum, behavior: "smooth" });
             }
         });
@@ -291,12 +319,12 @@ function initSwipeGestures() {
 
         track.addEventListener("touchmove", function(e) {
             if (!isDown) return;
-            var x = e.touches[0].pageX;
-            var walk = (x - startX) * 1.5;
+            const x = e.touches[0].pageX;
+            const walk = (x - startX) * 1.5;
             track.scrollLeft = startScrollLeft - walk;
 
-            var now = Date.now();
-            var dt = now - lastTime;
+            const now = Date.now();
+            const dt = now - lastTime;
             if (dt > 0) {
                 velocity = (x - lastX) / dt;
                 lastX = x;
@@ -310,7 +338,7 @@ function initSwipeGestures() {
             track.classList.remove("dragging");
 
             if (Math.abs(velocity) > 0.3) {
-                var momentum = velocity * 150;
+                const momentum = velocity * 150;
                 track.scrollBy({ left: -momentum, behavior: "smooth" });
             }
         });
@@ -322,6 +350,11 @@ function initSwipeGestures() {
 // 12. REINICIAR SWIPE GESTURES (para contenido dinámico)
 function reinitSwipeGestures() {
     if (swipeInitialized) {
+        const tracks = document.querySelectorAll(".carousel-track");
+        tracks.forEach(function(track) {
+            const clone = track.cloneNode(true);
+            track.parentNode.replaceChild(clone, track);
+        });
         initSwipeGestures();
     }
 }
@@ -333,50 +366,43 @@ function enviarWhatsApp() {
         return;
     }
 
-    var mensaje = "Hola, me gustaría consultar la disponibilidad de los siguientes productos:\n\n";
-    var total = 0;
+    let mensaje = "Hola, me gustaría consultar la disponibilidad de los siguientes productos:\n\n";
+    let total = 0;
 
-    for (var i = 0; i < carrito.length; i++) {
+    for (let i = 0; i < carrito.length; i++) {
         mensaje += (i + 1) + ". " + carrito[i].nombre + " - $" + carrito[i].precio.toFixed(2) + "\n";
         total += carrito[i].precio;
     }
 
-    var tasa = parseFloat(document.getElementById("tasa-cambio").value) || 973.93;
-    var totalBs = total * tasa;
+    const tasa = parseFloat(document.getElementById("tasa-cambio").value) || 973.93;
+    const totalBs = total * tasa;
 
     mensaje += "\nMonto Total Estimado: $" + total.toFixed(2) + " USD";
     mensaje += "\nMonto Total Estimado: Bs. " + totalBs.toFixed(2) + " (tasa del día)";
     mensaje += "\n\n¿Tienen disponibilidad de estos artículos?";
 
-    var url = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+    const url = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
     window.open(url, "_blank");
 }
 
 // 14. MOSTRAR NOTIFICACIONES TOAST
 function mostrarToast(mensaje, tipo) {
-    var container = document.getElementById("toast-container");
+    let container = document.getElementById("toast-container");
     if (!container) {
         container = document.createElement("div");
         container.id = "toast-container";
-        container.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;";
+        container.className = 'toast-container';
         document.body.appendChild(container);
     }
 
-    var colores = {
-        success: { bg: "#22c55e", border: "#16a34a" },
-        warning: { bg: "#f59e0b", border: "#d97706" },
-        info: { bg: "#3b82f6", border: "#2563eb" }
-    };
-    var color = colores[tipo] || colores.info;
-
-    var toast = document.createElement("div");
-    toast.style.cssText = "background: " + color.bg + "; color: white; padding: 12px 20px; border-radius: 10px; border-left: 4px solid " + color.border + "; font-weight: 600; font-size: 0.9em; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideIn 0.3s ease; max-width: 300px;";
+    const toast = document.createElement("div");
+    toast.className = 'toast toast-' + tipo;
     toast.textContent = mensaje;
 
     container.appendChild(toast);
 
     setTimeout(function() {
-        toast.style.animation = "slideOut 0.3s ease";
+        toast.classList.add('hiding');
         setTimeout(function() {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -385,13 +411,85 @@ function mostrarToast(mensaje, tipo) {
     }, 3000);
 }
 
-// Agregar animaciones CSS para los toasts
-var style = document.createElement("style");
-style.textContent = "@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }";
-document.head.appendChild(style);
+// Inicializar cuando el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar con manejo de errores
+    try {
+        cargarCarrito();
+        actualizarCarritoUI();
+        initSwipeGestures();
+        initScrollClose();
+    } catch (e) {
+        console.error('[ERROR] Fallo en inicialización:', e);
+    }
 
-// Inicializar
-cargarCarrito();
-actualizarCarritoUI();
-initSwipeGestures();
-initScrollClose();
+    // Inicializar eventos
+    
+    // Botón hamburguesa
+    const hamburger = document.querySelector('.hamburger-btn');
+    if (hamburger) hamburger.addEventListener('click', toggleMenu);
+
+    // Botón carrito
+    const cartBtn = document.querySelector('.cart-btn');
+    if (cartBtn) cartBtn.addEventListener('click', toggleCarrito);
+
+    // Botón cerrar menú
+    const closeMenuBtn = document.querySelector('.close-menu-btn');
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+
+    // Overlay del menú
+    const menuOverlay = document.getElementById('menu-overlay');
+    if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+
+    // Input de búsqueda
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.addEventListener('input', buscarProducto);
+
+    // Botones de carrusel
+    document.querySelectorAll('.carousel-btn.prev').forEach(btn => {
+        btn.addEventListener('click', function() { scrollCarousel(this, -1); });
+    });
+    document.querySelectorAll('.carousel-btn.next').forEach(btn => {
+        btn.addEventListener('click', function() { scrollCarousel(this, 1); });
+    });
+
+    // Botones de añadir al carrito - usar data atributos
+    const productButtons = document.querySelectorAll('.product-info button');
+    productButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const nombre = this.dataset.nombre;
+            const precio = parseFloat(this.dataset.precio);
+            agregarAlCarrito(nombre, precio);
+        });
+    });
+
+    // Enlaces del menú lateral
+    document.querySelectorAll('.menu-list a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            scrollToSection(targetId);
+            toggleMenu();
+        });
+    });
+
+    // Botón flotante de carrito
+    const floatingCartBtn = document.querySelector('.floating-cart-btn');
+    if (floatingCartBtn) floatingCartBtn.addEventListener('click', toggleCarrito);
+
+    // Botón cerrar carrito
+    const closeCartBtn = document.querySelector('.close-btn');
+    if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCarrito);
+
+    // Overlay del carrito
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.addEventListener('click', toggleCarrito);
+
+    // Input de tasa de cambio
+    const tasaInput = document.getElementById('tasa-cambio');
+    if (tasaInput) tasaInput.addEventListener('input', actualizarConversion);
+
+    // Botón de WhatsApp
+    const whatsappBtn = document.querySelector('.whatsapp-btn');
+    if (whatsappBtn) whatsappBtn.addEventListener('click', enviarWhatsApp);
+});
