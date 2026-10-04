@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jesus Romero Store | Tienda Virtual</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300,400,600,700&display=swap" rel="stylesheet">
+    <!-- Fuente del sistema (sin dependencia externa) -->
     <link rel="stylesheet" href="stile.css">
 </head>
 <body>
@@ -21,7 +21,7 @@
 
     <!-- Header / Navbar -->
     <header class="navbar">
-        <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menú">
+        <button class="hamburger-btn" aria-label="Menú">
             <span></span>
             <span></span>
             <span></span>
@@ -29,32 +29,45 @@
         <div class="logo">
             <h1>Jesus Romero <span>Store</span></h1>
         </div>
-        <div class="cart-btn" onclick="toggleCarrito()">
-            🛒 Carrito <span id="cart-count">0</span>
+        <div class="cart-btn">
+            🛒 Carrito <span id="cart-count" aria-live="polite">0</span>
         </div>
     </header>
 
     <!-- Menú Lateral -->
-    <nav id="side-menu" class="side-menu">
+    <nav id="side-menu" class="side-menu" role="navigation" aria-label="Menú de categorías">
         <div class="menu-header">
             <h2>Menú</h2>
-            <button class="close-menu-btn" onclick="toggleMenu()">&times;</button>
+            <button class="close-menu-btn">&times;</button>
         </div>
         <ul class="menu-list">
-            <li><a href="#switch2" onclick="scrollToSection('switch2'); toggleMenu();">Nintendo Switch 2</a></li>
-            <li><a href="#switch" onclick="scrollToSection('switch'); toggleMenu();">Nintendo Switch</a></li>
-            <li><a href="#ps4" onclick="scrollToSection('ps4'); toggleMenu();">PlayStation 4</a></li>
-            <li><a href="#ps5" onclick="scrollToSection('ps5'); toggleMenu();">PlayStation 5</a></li>
-            <li><a href="#articulos" onclick="scrollToSection('articulos'); toggleMenu();">Artículos de Consola</a></li>
-            <li><a href="#relojes" onclick="scrollToSection('relojes'); toggleMenu();">Relojes</a></li>
+            <li><a href="#switch2">Nintendo Switch 2</a></li>
+            <li><a href="#switch">Nintendo Switch</a></li>
+            <li><a href="#ps4">PlayStation 4</a></li>
+            <li><a href="#ps5">PlayStation 5</a></li>
+            <li><a href="#articulos">Artículos de Consola</a></li>
+            <li><a href="#relojes">Relojes</a></li>
         </ul>
     </nav>
-    <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h2 class="hero-title">🎮 Tu Tienda de Videojuegos</h2>
+            <p class="hero-subtitle">Los mejores precios en consolas, videojuegos y accesorios</p>
+            <div class="hero-badges">
+                <span class="hero-badge">🚀 Envío Rápido</span>
+                <span class="hero-badge">💳 Pago Seguro</span>
+                <span class="hero-badge">✅ Garantía</span>
+            </div>
+        </div>
+    </section>
 
     <!-- Buscador -->
     <section class="controls-section">
         <div class="search-box">
-            <input type="text" id="search-input" onkeyup="buscarProducto()" placeholder="🔍 Buscar videojuego o artículo...">
+            <input type="text" id="search-input" placeholder="🔍 Buscar videojuego o artículo...">
         </div>
     </section>
 
@@ -62,7 +75,7 @@
     <section class="category-section" id="switch2" data-category="switch2">
         <h2 class="section-title">Nintendo Switch 2</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
                 <div class="product-card" data-category="switch">
                     <div class="img-container">
@@ -72,7 +85,7 @@
                     <div class="product-info">
                         <h3>Dragon Ball Sparking! Zero</h3>
                         <p class="price">$60.00</p>
-                        <button onclick="agregarAlCarrito('Dragon Ball Sparking! Zero', 60)">Añadir al Carrito</button>
+                        <button data-nombre="Dragon Ball Sparking! Zero" data-precio="60">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -83,7 +96,7 @@
                     <div class="product-info">
                         <h3>Pokémon Pokepia</h3>
                         <p class="price">$75.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Pokepia', 75)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Pokepia" data-precio="75">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -94,7 +107,7 @@
                     <div class="product-info">
                         <h3>The Legend of Zelda: Tears of the Kingdom (Switch 2 Ed.)</h3>
                         <p class="price">$75.00</p>
-                        <button onclick="agregarAlCarrito('The Legend of Zelda: Tears of the Kingdom (Switch 2 Ed.)', 75)">Añadir al Carrito</button>
+                        <button data-nombre="The Legend of Zelda: Tears of the Kingdom (Switch 2 Ed.)" data-precio="75">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -105,11 +118,11 @@
                     <div class="product-info">
                         <h3>The Legend of Zelda: Breath of the Wild (Switch 2 Ed.)</h3>
                         <p class="price">$70.00</p>
-                        <button onclick="agregarAlCarrito('The Legend of Zelda: Breath of the Wild (Switch 2 Ed.)', 70)">Añadir al Carrito</button>
+                        <button data-nombre="The Legend of Zelda: Breath of the Wild (Switch 2 Ed.)" data-precio="70">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
@@ -117,7 +130,7 @@
     <section class="category-section" id="switch" data-category="switch">
         <h2 class="section-title">Nintendo Switch</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
                 <div class="product-card" data-category="switch">
                     <div class="img-container">
@@ -127,7 +140,7 @@
                     <div class="product-info">
                         <h3>Hyrule Warriors: Age of Calamity</h3>
                         <p class="price">$55.00</p>
-                        <button onclick="agregarAlCarrito('Hyrule Warriors Age of Calamity', 55)">Añadir al Carrito</button>
+                        <button data-nombre="Hyrule Warriors Age of Calamity" data-precio="55">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -138,7 +151,7 @@
                     <div class="product-info">
                         <h3>Pokémon Violet</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Violet', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Violet" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -149,7 +162,7 @@
                     <div class="product-info">
                         <h3>Minecraft Dungeons (Ultimate Edition)</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('Minecraft Dungeons Ultimate Edition', 45)">Añadir al Carrito</button>
+                        <button data-nombre="Minecraft Dungeons Ultimate Edition" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -160,7 +173,7 @@
                     <div class="product-info">
                         <h3>Metroid Prime 4: Beyond</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Metroid Prime 4 Beyond', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Metroid Prime 4 Beyond" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -171,7 +184,7 @@
                     <div class="product-info">
                         <h3>Luigi's Mansion 3</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Luigi\'s Mansion 3', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Luigi\'s Mansion 3" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -182,7 +195,7 @@
                     <div class="product-info">
                         <h3>Super Mario RPG</h3>
                         <p class="price">$55.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario RPG', 55)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario RPG" data-precio="55">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -193,7 +206,7 @@
                     <div class="product-info">
                         <h3>Mortal Kombat 1</h3>
                         <p class="price">$55.00</p>
-                        <button onclick="agregarAlCarrito('Mortal Kombat 1', 55)">Añadir al Carrito</button>
+                        <button data-nombre="Mortal Kombat 1" data-precio="55">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -204,7 +217,7 @@
                     <div class="product-info">
                         <h3>Super Smash Bros Ultimate</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Smash Bros Ultimate', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Smash Bros Ultimate" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -215,7 +228,7 @@
                     <div class="product-info">
                         <h3>Pokémon Let's Go Pikachu</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Let\'s Go Pikachu', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Let\'s Go Pikachu" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -226,7 +239,7 @@
                     <div class="product-info">
                         <h3>Pokémon Shield</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokemon Shield', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokemon Shield" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -237,7 +250,7 @@
                     <div class="product-info">
                         <h3>Pokémon Legends Arceus</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokemon Legends Arceus', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokemon Legends Arceus" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -248,7 +261,7 @@
                     <div class="product-info">
                         <h3>Pokémon Sword</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokemon Sword', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokemon Sword" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -259,7 +272,7 @@
                     <div class="product-info">
                         <h3>Super Mario Bros U Deluxe</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Bros U Deluxe', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Bros U Deluxe" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -270,7 +283,7 @@
                     <div class="product-info">
                         <h3>Super Mario Bros Wonder</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Bros Wonder', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Bros Wonder" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -281,7 +294,7 @@
                     <div class="product-info">
                         <h3>Zelda Echoes of Wisdom</h3>
                         <p class="price">$55.00</p>
-                        <button onclick="agregarAlCarrito('Zelda Echoes of Wisdom', 55)">Añadir al Carrito</button>
+                        <button data-nombre="Zelda Echoes of Wisdom" data-precio="55">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -292,7 +305,7 @@
                     <div class="product-info">
                         <h3>Super Mario Odyssey</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Odyssey', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Odyssey" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -303,7 +316,7 @@
                     <div class="product-info">
                         <h3>Super Mario Party Superstars</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Party Superstars', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Party Superstars" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -314,7 +327,7 @@
                     <div class="product-info">
                         <h3>Mario Kart 8 Deluxe</h3>
                         <p class="price">$52.00</p>
-                        <button onclick="agregarAlCarrito('Mario Kart 8 Deluxe', 52)">Añadir al Carrito</button>
+                        <button data-nombre="Mario Kart 8 Deluxe" data-precio="52">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -325,7 +338,7 @@
                     <div class="product-info">
                         <h3>Super Mario 3D World + Bowser's Fury</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario 3D World + Bowser\'s Fury', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario 3D World + Bowser\'s Fury" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -336,7 +349,7 @@
                     <div class="product-info">
                         <h3>Mario + Rabbids</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Mario + Rabbids', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Mario + Rabbids" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -347,7 +360,7 @@
                     <div class="product-info">
                         <h3>Minecraft</h3>
                         <p class="price">$47.00</p>
-                        <button onclick="agregarAlCarrito('Minecraft', 47)">Añadir al Carrito</button>
+                        <button data-nombre="Minecraft" data-precio="47">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -358,7 +371,7 @@
                     <div class="product-info">
                         <h3>Animal Crossing New Horizons</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Animal Crossing New Horizons', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Animal Crossing New Horizons" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -369,7 +382,7 @@
                     <div class="product-info">
                         <h3>EA Sports FC 26</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('EA Sports FC 26', 50)">Añadir al Carrito</button>
+                        <button data-nombre="EA Sports FC 26" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -380,7 +393,7 @@
                     <div class="product-info">
                         <h3>Super Mario Galaxy 1 y 2</h3>
                         <p class="price">$67.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Galaxy 1 y 2', 67)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Galaxy 1 y 2" data-precio="67">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -391,7 +404,7 @@
                     <div class="product-info">
                         <h3>Super Mario Maker 2</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario Maker 2', 45)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario Maker 2" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -402,7 +415,7 @@
                     <div class="product-info">
                         <h3>Super Mario 3D All-Stars</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Super Mario 3D All-Stars', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Super Mario 3D All-Stars" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -413,7 +426,7 @@
                     <div class="product-info">
                         <h3>Zelda Breath of the Wild</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('Zelda Breath of the Wild', 45)">Añadir al Carrito</button>
+                        <button data-nombre="Zelda Breath of the Wild" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -424,7 +437,7 @@
                     <div class="product-info">
                         <h3>Pokémon Legends Z-A</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Legends Z-A', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Legends Z-A" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -435,7 +448,7 @@
                     <div class="product-info">
                         <h3>Pokémon Shining Pearl</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Shining Pearl', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Shining Pearl" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="switch">
@@ -446,11 +459,11 @@
                     <div class="product-info">
                         <h3>Pokémon Brilliant Diamond</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Pokémon Brilliant Diamond', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Pokémon Brilliant Diamond" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
@@ -458,8 +471,30 @@
     <section class="category-section" id="ps4" data-category="ps4">
         <h2 class="section-title">PlayStation 4</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
+                <div class="product-card" data-category="ps4">
+                    <div class="img-container">
+                        <img src="https://cdn2.steamgriddb.com/thumb/3940304b536796dcc176aa83203a3955.jpg" alt="Red Dead Redemption II" loading="lazy">
+                        <span class="badge ps4-badge">PS4</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>Red Dead Redemption II</h3>
+                        <p class="price">$25.00</p>
+                        <button data-nombre="Red Dead Redemption II" data-precio="25">Añadir al Carrito</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="ps4">
+                    <div class="img-container">
+                        <img src="https://cdn2.steamgriddb.com/thumb/ac872cacefd8a60537de5a64570b35a9.jpg" alt="Assassin's Creed Origins" loading="lazy">
+                        <span class="badge ps4-badge">PS4</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>Assassin's Creed Origins</h3>
+                        <p class="price">$20.00</p>
+                        <button data-nombre="Assassin\'s Creed Origins" data-precio="20">Añadir al Carrito</button>
+                    </div>
+                </div>
                 <div class="product-card" data-category="ps4">
                     <div class="img-container">
                         <img src="https://cdn2.steamgriddb.com/thumb/fd93fd1de50e084dd7d3b0b9f6950450.jpg" alt="God of War Ragnarok PS4" loading="lazy">
@@ -468,18 +503,18 @@
                     <div class="product-info">
                         <h3>God of War Ragnarok</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('God of War Ragnarok', 35)">Añadir al Carrito</button>
+                        <button data-nombre="God of War Ragnarok" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
                     <div class="img-container">
-                        <img src="https://cdn2.steamgriddb.com/thumb/5855660034a74cfe0e5fc8d57d17f4ac.jpg" alt="God of War PS4 Hits" loading="lazy">
+                        <img src="https://cdn2.steamgriddb.com/thumb/5855660034a74cfe0e5fc8d57d17f4ac.jpg" alt="God of War III Remastered" loading="lazy">
                         <span class="badge ps4-badge">PS4</span>
                     </div>
                     <div class="product-info">
-                        <h3>God of War (Estuche Rojo)</h3>
+                        <h3>God of War III Remastered (Estuche Rojo)</h3>
                         <p class="price">$23.00</p>
-                        <button onclick="agregarAlCarrito('God of War (Estuche Rojo)', 23)">Añadir al Carrito</button>
+                        <button data-nombre="God of War III Remastered (Estuche Rojo)" data-precio="23">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -490,7 +525,7 @@
                     <div class="product-info">
                         <h3>Death Stranding</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Death Stranding', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Death Stranding" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -501,7 +536,7 @@
                     <div class="product-info">
                         <h3>Call of Duty WWII</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty WWII', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty WWII" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -512,7 +547,7 @@
                     <div class="product-info">
                         <h3>Watch Dogs Legion</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Watch Dogs Legion', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Watch Dogs Legion" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -523,7 +558,7 @@
                     <div class="product-info">
                         <h3>Uncharted The Lost Legacy</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Uncharted The Lost Legacy', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Uncharted The Lost Legacy" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -534,7 +569,7 @@
                     <div class="product-info">
                         <h3>Dragon Ball Xenoverse</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Dragon Ball Xenoverse', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Dragon Ball Xenoverse" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -545,7 +580,7 @@
                     <div class="product-info">
                         <h3>Borderlands 3</h3>
                         <p class="price">$15.00</p>
-                        <button onclick="agregarAlCarrito('Borderlands 3', 15)">Añadir al Carrito</button>
+                        <button data-nombre="Borderlands 3" data-precio="15">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -556,7 +591,7 @@
                     <div class="product-info">
                         <h3>Ghost of Tsushima</h3>
                         <p class="price">$33.00</p>
-                        <button onclick="agregarAlCarrito('Ghost of Tsushima', 33)">Añadir al Carrito</button>
+                        <button data-nombre="Ghost of Tsushima" data-precio="33">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -567,7 +602,7 @@
                     <div class="product-info">
                         <h3>The Last of Us Part 2</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('The Last of Us Part 2', 30)">Añadir al Carrito</button>
+                        <button data-nombre="The Last of Us Part 2" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -578,7 +613,7 @@
                     <div class="product-info">
                         <h3>Grand Theft Auto V</h3>
                         <p class="price">$29.00</p>
-                        <button onclick="agregarAlCarrito('Grand Theft Auto V', 29)">Añadir al Carrito</button>
+                        <button data-nombre="Grand Theft Auto V" data-precio="29">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -589,7 +624,7 @@
                     <div class="product-info">
                         <h3>Resident Evil 4 Remake</h3>
                         <p class="price">$32.00</p>
-                        <button onclick="agregarAlCarrito('Resident Evil 4 Remake', 32)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil 4 Remake" data-precio="32">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -600,7 +635,7 @@
                     <div class="product-info">
                         <h3>Call of Duty Modern Warfare</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty Modern Warfare', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty Modern Warfare" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -611,7 +646,7 @@
                     <div class="product-info">
                         <h3>Jump Force</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Jump Force', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Jump Force" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -622,7 +657,7 @@
                     <div class="product-info">
                         <h3>The Last of Us Remastered</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('The Last of Us Remastered', 25)">Añadir al Carrito</button>
+                        <button data-nombre="The Last of Us Remastered" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -633,7 +668,7 @@
                     <div class="product-info">
                         <h3>Assassin's Creed Odyssey</h3>
                         <p class="price">$15.00</p>
-                        <button onclick="agregarAlCarrito('Assassin\'s Creed Odyssey', 15)">Añadir al Carrito</button>
+                        <button data-nombre="Assassin\'s Creed Odyssey" data-precio="15">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -644,7 +679,7 @@
                     <div class="product-info">
                         <h3>Cyberpunk 2077</h3>
                         <p class="price">$29.00</p>
-                        <button onclick="agregarAlCarrito('Cyberpunk 2077', 29)">Añadir al Carrito</button>
+                        <button data-nombre="Cyberpunk 2077" data-precio="29">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -655,7 +690,7 @@
                     <div class="product-info">
                         <h3>Far Cry New Dawn</h3>
                         <p class="price">$10.00</p>
-                        <button onclick="agregarAlCarrito('Far Cry New Dawn', 10)">Añadir al Carrito</button>
+                        <button data-nombre="Far Cry New Dawn" data-precio="10">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -666,7 +701,7 @@
                     <div class="product-info">
                         <h3>Call of Duty Black Ops 3</h3>
                         <p class="price">$15.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty Black Ops 3', 15)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty Black Ops 3" data-precio="15">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -677,7 +712,7 @@
                     <div class="product-info">
                         <h3>Fallout 4</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Fallout 4', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Fallout 4" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -688,7 +723,7 @@
                     <div class="product-info">
                         <h3>Horizon Zero Dawn Complete Edition</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Horizon Zero Dawn Complete Edition', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Horizon Zero Dawn Complete Edition" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -699,7 +734,7 @@
                     <div class="product-info">
                         <h3>Fallout 76</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Fallout 76', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Fallout 76" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -710,7 +745,7 @@
                     <div class="product-info">
                         <h3>Far Cry 6</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Far Cry 6', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Far Cry 6" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -721,7 +756,7 @@
                     <div class="product-info">
                         <h3>Mortal Kombat 11</h3>
                         <p class="price">$37.50</p>
-                        <button onclick="agregarAlCarrito('Mortal Kombat 11', 37.50)">Añadir al Carrito</button>
+                        <button data-nombre="Mortal Kombat 11" data-precio="37.50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -732,7 +767,7 @@
                     <div class="product-info">
                         <h3>Resident Evil 2 Remake</h3>
                         <p class="price">$28.50</p>
-                        <button onclick="agregarAlCarrito('Resident Evil 2 Remake', 28.50)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil 2 Remake" data-precio="28.50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -743,7 +778,7 @@
                     <div class="product-info">
                         <h3>Resident Evil 7 Biohazard</h3>
                         <p class="price">$28.00</p>
-                        <button onclick="agregarAlCarrito('Resident Evil 7 Biohazard', 28)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil 7 Biohazard" data-precio="28">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -754,7 +789,7 @@
                     <div class="product-info">
                         <h3>Resident Evil Village</h3>
                         <p class="price">$28.00</p>
-                        <button onclick="agregarAlCarrito('Resident Evil Village', 28)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil Village" data-precio="28">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -765,7 +800,7 @@
                     <div class="product-info">
                         <h3>Ratchet & Clank</h3>
                         <p class="price">$15.00</p>
-                        <button onclick="agregarAlCarrito('Ratchet & Clank', 15)">Añadir al Carrito</button>
+                        <button data-nombre="Ratchet & Clank" data-precio="15">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -776,7 +811,7 @@
                     <div class="product-info">
                         <h3>Spider-Man Miles Morales</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Spider-Man Miles Morales', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Spider-Man Miles Morales" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -787,7 +822,7 @@
                     <div class="product-info">
                         <h3>Marvel's Spider-Man</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Marvel\'s Spider-Man', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Marvel\'s Spider-Man" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -798,7 +833,7 @@
                     <div class="product-info">
                         <h3>Naruto Storm Trilogy</h3>
                         <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Naruto Storm Trilogy', 20)">Añadir al Carrito</button>
+                        <button data-nombre="Naruto Storm Trilogy" data-precio="20">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -809,7 +844,7 @@
                     <div class="product-info">
                         <h3>Dark Souls III</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Dark Souls III', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Dark Souls III" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -820,7 +855,7 @@
                     <div class="product-info">
                         <h3>DOOM</h3>
                         <p class="price">$28.00</p>
-                        <button onclick="agregarAlCarrito('DOOM', 28)">Añadir al Carrito</button>
+                        <button data-nombre="DOOM" data-precio="28">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -831,7 +866,7 @@
                     <div class="product-info">
                         <h3>DOOM Eternal</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('DOOM Eternal', 35)">Añadir al Carrito</button>
+                        <button data-nombre="DOOM Eternal" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -842,7 +877,7 @@
                     <div class="product-info">
                         <h3>The Last of Us Remastered (Estuche Rojo)</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('The Last of Us Remastered (Estuche Rojo)', 25)">Añadir al Carrito</button>
+                        <button data-nombre="The Last of Us Remastered (Estuche Rojo)" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -853,7 +888,7 @@
                     <div class="product-info">
                         <h3>Star Wars Battlefront II</h3>
                         <p class="price">$10.00</p>
-                        <button onclick="agregarAlCarrito('Star Wars Battlefront II', 10)">Añadir al Carrito</button>
+                        <button data-nombre="Star Wars Battlefront II" data-precio="10">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -864,7 +899,7 @@
                     <div class="product-info">
                         <h3>Naruto to Boruto: Shinobi Striker</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Naruto to Boruto Shinobi Striker', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Naruto to Boruto Shinobi Striker" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -875,7 +910,7 @@
                     <div class="product-info">
                         <h3>Sonic Forces</h3>
                         <p class="price">$19.00</p>
-                        <button onclick="agregarAlCarrito('Sonic Forces', 19)">Añadir al Carrito</button>
+                        <button data-nombre="Sonic Forces" data-precio="19">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -886,7 +921,7 @@
                     <div class="product-info">
                         <h3>Uncharted 4: A Thief's End</h3>
                         <p class="price">$15.00</p>
-                        <button onclick="agregarAlCarrito('Uncharted 4: A Thief\'s End', 15)">Añadir al Carrito</button>
+                        <button data-nombre="Uncharted 4: A Thief\'s End" data-precio="15">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps4">
@@ -896,12 +931,12 @@
                     </div>
                     <div class="product-info">
                         <h3>Need for Speed Rivals</h3>
-                        <p class="price">$20.00</p>
-                        <button onclick="agregarAlCarrito('Need for Speed Rivals', 20)">Añadir al Carrito</button>
+                        <p class="price">$18.00</p>
+                        <button data-nombre="Need for Speed Rivals" data-precio="18">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
@@ -909,7 +944,7 @@
     <section class="category-section" id="ps5" data-category="ps5">
         <h2 class="section-title">PlayStation 5</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
                 <div class="product-card" data-category="ps5">
                     <div class="img-container">
@@ -919,7 +954,7 @@
                     <div class="product-info">
                         <h3>Call of Duty: Modern Warfare II</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty: Modern Warfare II', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty: Modern Warfare II" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -930,7 +965,7 @@
                     <div class="product-info">
                         <h3>Ghost of Tsushima (Director's Cut)</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Ghost of Tsushima (Director\'s Cut)', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Ghost of Tsushima (Director\'s Cut)" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -941,7 +976,7 @@
                     <div class="product-info">
                         <h3>Gran Turismo 7</h3>
                         <p class="price">$38.00</p>
-                        <button onclick="agregarAlCarrito('Gran Turismo 7', 38)">Añadir al Carrito</button>
+                        <button data-nombre="Gran Turismo 7" data-precio="38">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -952,7 +987,7 @@
                     <div class="product-info">
                         <h3>Watch Dogs Legion</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Watch Dogs Legion', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Watch Dogs Legion" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -963,7 +998,7 @@
                     <div class="product-info">
                         <h3>Horizon Forbidden West</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Horizon Forbidden West', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Horizon Forbidden West" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -974,7 +1009,7 @@
                     <div class="product-info">
                         <h3>Hitman 3</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Hitman 3', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Hitman 3" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -985,7 +1020,7 @@
                     <div class="product-info">
                         <h3>Returnal</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Returnal', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Returnal" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -996,7 +1031,7 @@
                     <div class="product-info">
                         <h3>Far Cry 6</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Far Cry 6', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Far Cry 6" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1007,7 +1042,7 @@
                     <div class="product-info">
                         <h3>Godfall</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Godfall', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Godfall" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1018,7 +1053,7 @@
                     <div class="product-info">
                         <h3>EA Sports FC 24</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('EA Sports FC 24', 25)">Añadir al Carrito</button>
+                        <button data-nombre="EA Sports FC 24" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1029,7 +1064,7 @@
                     <div class="product-info">
                         <h3>Marvel's Avengers</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Marvel Avengers', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Marvel Avengers" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1040,7 +1075,7 @@
                     <div class="product-info">
                         <h3>Uncharted Legacy Remaster</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Uncharted Legacy Remaster', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Uncharted Legacy Remaster" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1051,7 +1086,7 @@
                     <div class="product-info">
                         <h3>Ratchet & Clank: Rift Apart</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Ratchet and Clank Rift Apart', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Ratchet and Clank Rift Apart" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1062,7 +1097,7 @@
                     <div class="product-info">
                         <h3>Gotham Knights</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Gotham Knights', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Gotham Knights" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1073,7 +1108,7 @@
                     <div class="product-info">
                         <h3>Need for Speed Unbound</h3>
                         <p class="price">$28.00</p>
-                        <button onclick="agregarAlCarrito('Need for Speed Unbound', 28)">Añadir al Carrito</button>
+                        <button data-nombre="Need for Speed Unbound" data-precio="28">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1084,7 +1119,7 @@
                     <div class="product-info">
                         <h3>Guardianes de la Galaxia</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Guardianes de la Galaxia', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Guardianes de la Galaxia" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1095,7 +1130,7 @@
                     <div class="product-info">
                         <h3>Resident Evil 4 Remake</h3>
                         <p class="price">$32.00</p>
-                        <button onclick="agregarAlCarrito('Resident Evil 4 Remake', 32)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil 4 Remake" data-precio="32">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1106,7 +1141,7 @@
                     <div class="product-info">
                         <h3>Nioh Collection</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Nioh Collection', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Nioh Collection" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1117,7 +1152,7 @@
                     <div class="product-info">
                         <h3>Mortal Kombat Ultimate 2</h3>
                         <p class="price">$46.50</p>
-                        <button onclick="agregarAlCarrito('Mortal Kombat Ultimate 2', 46.50)">Añadir al Carrito</button>
+                        <button data-nombre="Mortal Kombat Ultimate 2" data-precio="46.50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1128,7 +1163,7 @@
                     <div class="product-info">
                         <h3>The Last of Us Part 2 Remaster</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('The Last of Us Part 2 Remaster', 45)">Añadir al Carrito</button>
+                        <button data-nombre="The Last of Us Part 2 Remaster" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1139,7 +1174,7 @@
                     <div class="product-info">
                         <h3>The Last of Us Part 1</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('The Last of Us Part 1', 40)">Añadir al Carrito</button>
+                        <button data-nombre="The Last of Us Part 1" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1150,7 +1185,7 @@
                     <div class="product-info">
                         <h3>God of War Ragnarok</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('God of War Ragnarok', 50)">Añadir al Carrito</button>
+                        <button data-nombre="God of War Ragnarok" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1161,7 +1196,7 @@
                     <div class="product-info">
                         <h3>Tekken 8</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('Tekken 8', 45)">Añadir al Carrito</button>
+                        <button data-nombre="Tekken 8" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1172,7 +1207,7 @@
                     <div class="product-info">
                         <h3>Assassin's Creed Valhalla</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Assassin\'s Creed Valhalla', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Assassin\'s Creed Valhalla" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1183,7 +1218,7 @@
                     <div class="product-info">
                         <h3>Final Fantasy VII Reunion</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Final Fantasy VII Reunion', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Final Fantasy VII Reunion" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1194,7 +1229,7 @@
                     <div class="product-info">
                         <h3>Call of Duty Black Ops 7</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty Black Ops 7', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty Black Ops 7" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1205,7 +1240,7 @@
                     <div class="product-info">
                         <h3>Call of Duty Black Ops 6</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Call of Duty Black Ops 6', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Call of Duty Black Ops 6" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1216,7 +1251,7 @@
                     <div class="product-info">
                         <h3>Rainbow Six Siege Deluxe</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Rainbow Six Siege Deluxe', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Rainbow Six Siege Deluxe" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1227,7 +1262,7 @@
                     <div class="product-info">
                         <h3>EA Sports FC 26</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('EA Sports FC 26', 40)">Añadir al Carrito</button>
+                        <button data-nombre="EA Sports FC 26" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1238,7 +1273,7 @@
                     <div class="product-info">
                         <h3>Spider-Man Miles Morales Ultimate</h3>
                         <p class="price">$33.00</p>
-                        <button onclick="agregarAlCarrito('Spider-Man Miles Morales Ultimate', 33)">Añadir al Carrito</button>
+                        <button data-nombre="Spider-Man Miles Morales Ultimate" data-precio="33">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1249,7 +1284,7 @@
                     <div class="product-info">
                         <h3>Resident Evil Village</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Resident Evil Village', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Resident Evil Village" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1260,7 +1295,7 @@
                     <div class="product-info">
                         <h3>Battlefield 2042</h3>
                         <p class="price">$35.00</p>
-                        <button onclick="agregarAlCarrito('Battlefield 2042', 35)">Añadir al Carrito</button>
+                        <button data-nombre="Battlefield 2042" data-precio="35">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="ps5">
@@ -1271,11 +1306,11 @@
                     <div class="product-info">
                         <h3>Dragon Ball Sparking Zero</h3>
                         <p class="price">$40.00</p>
-                        <button onclick="agregarAlCarrito('Dragon Ball Sparking Zero', 40)">Añadir al Carrito</button>
+                        <button data-nombre="Dragon Ball Sparking Zero" data-precio="40">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
@@ -1283,7 +1318,7 @@
     <section class="category-section" id="articulos" data-category="articulos">
         <h2 class="section-title">Artículos de Consola</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
                 <div class="product-card" data-category="articulos">
                     <div class="img-container">
@@ -1293,7 +1328,7 @@
                     <div class="product-info">
                         <h3>Cargador Doble Charging Dock PS5</h3>
                         <p class="price">$25.00</p>
-                        <button onclick="agregarAlCarrito('Cargador Doble Charging Dock PS5', 25)">Añadir al Carrito</button>
+                        <button data-nombre="Cargador Doble Charging Dock PS5" data-precio="25">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="articulos">
@@ -1304,7 +1339,7 @@
                     <div class="product-info">
                         <h3>Control PlayStation 5 (Rojo, Blanco y Plateado)</h3>
                         <p class="price">$75.00</p>
-                        <button onclick="agregarAlCarrito('Control PlayStation 5 (Rojo, Blanco y Plateado)', 75)">Añadir al Carrito</button>
+                        <button data-nombre="Control PlayStation 5 (Rojo, Blanco y Plateado)" data-precio="75">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="articulos">
@@ -1315,7 +1350,7 @@
                     <div class="product-info">
                         <h3>Control Nintendo Diseño Zelda</h3>
                         <p class="price">$45.00</p>
-                        <button onclick="agregarAlCarrito('Control Nintendo Diseño Zelda', 45)">Añadir al Carrito</button>
+                        <button data-nombre="Control Nintendo Diseño Zelda" data-precio="45">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="articulos">
@@ -1326,11 +1361,11 @@
                     <div class="product-info">
                         <h3>Cargador Dock para Nintendo Switch</h3>
                         <p class="price">$30.00</p>
-                        <button onclick="agregarAlCarrito('Cargador Dock para Nintendo Switch', 30)">Añadir al Carrito</button>
+                        <button data-nombre="Cargador Dock para Nintendo Switch" data-precio="30">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
@@ -1338,7 +1373,7 @@
     <section class="category-section" id="relojes" data-category="relojes">
         <h2 class="section-title">Relojes</h2>
         <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="scrollCarousel(this, -1)">❮</button>
+            <button class="carousel-btn prev" aria-label="Anterior">❮</button>
             <div class="carousel-track">
                 <div class="product-card" data-category="relojes">
                     <div class="img-container">
@@ -1348,7 +1383,7 @@
                     <div class="product-info">
                         <h3>Reloj Invicta Pro Diver 0072 Para Hombre Nuevo Original</h3>
                         <p class="price">$160.00</p>
-                        <button onclick="agregarAlCarrito('Reloj Invicta Pro Diver 0072', 160)">Añadir al Carrito</button>
+                        <button data-nombre="Reloj Invicta Pro Diver 0072" data-precio="160">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="relojes">
@@ -1359,7 +1394,7 @@
                     <div class="product-info">
                         <h3>Reloj Casio 3-Hands Análogo</h3>
                         <p class="price">$60.00</p>
-                        <button onclick="agregarAlCarrito('Reloj Casio 3-Hands Análogo', 60)">Añadir al Carrito</button>
+                        <button data-nombre="Reloj Casio 3-Hands Análogo" data-precio="60">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="relojes">
@@ -1370,7 +1405,7 @@
                     <div class="product-info">
                         <h3>Casio Analógico Correa de Cuero</h3>
                         <p class="price">$70.00</p>
-                        <button onclick="agregarAlCarrito('Casio Analógico Correa de Cuero', 70)">Añadir al Carrito</button>
+                        <button data-nombre="Casio Analógico Correa de Cuero" data-precio="70">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="relojes">
@@ -1381,7 +1416,7 @@
                     <div class="product-info">
                         <h3>RELOJ CUARZO HAPPY MEDIUM NIXON DORADO</h3>
                         <p class="price">$50.00</p>
-                        <button onclick="agregarAlCarrito('Reloj Nixon Dorado', 50)">Añadir al Carrito</button>
+                        <button data-nombre="Reloj Nixon Dorado" data-precio="50">Añadir al Carrito</button>
                     </div>
                 </div>
                 <div class="product-card" data-category="relojes">
@@ -1392,16 +1427,16 @@
                     <div class="product-info">
                         <h3>Casio G-Shock</h3>
                         <p class="price">$110.00</p>
-                        <button onclick="agregarAlCarrito('Casio G-Shock', 110)">Añadir al Carrito</button>
+                        <button data-nombre="Casio G-Shock" data-precio="110">Añadir al Carrito</button>
                     </div>
                 </div>
             </div>
-            <button class="carousel-btn next" onclick="scrollCarousel(this, 1)">❯</button>
+            <button class="carousel-btn next" aria-label="Siguiente">❯</button>
         </div>
     </section>
 
     <!-- Botón Flotante de Carrito -->
-    <button class="floating-cart-btn" onclick="toggleCarrito()" aria-label="Abrir carrito">
+    <button class="floating-cart-btn" aria-label="Abrir carrito">
         🛒 <span id="floating-cart-count">0</span>
     </button>
 
@@ -1409,7 +1444,7 @@
     <div id="cart-sidebar" class="cart-sidebar">
         <div class="cart-header">
             <h2>Tu Carrito</h2>
-            <span class="close-btn" onclick="toggleCarrito()">&times;</span>
+            <span class="close-btn">&times;</span>
         </div>
         <div class="cart-body">
             <ul id="cart-items"></ul>
@@ -1418,15 +1453,15 @@
             <p class="total">Total: $<span id="cart-total">0.00</span></p>
             <div class="currency-converter">
                 <label for="tasa-cambio">Tasa Bs/EUR BCV:</label>
-                <input type="number" id="tasa-cambio" value="973.93" step="0.01" min="0" oninput="actualizarConversion()">
+                <input type="number" id="tasa-cambio" value="973.93" step="0.01" min="0">
                 <p class="total-bs">Total: Bs. <span id="total-bs">0.00</span></p>
             </div>
-            <button class="whatsapp-btn" onclick="enviarWhatsApp()">
+            <button class="whatsapp-btn">
                 Pedir por WhatsApp 💬
             </button>
         </div>
     </div>
-    <div id="overlay" class="overlay" onclick="toggleCarrito()"></div>
+    <div id="overlay" class="overlay"></div>
 
     <script src="Hola.js"></script>
 </body>
